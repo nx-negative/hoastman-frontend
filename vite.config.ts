@@ -41,10 +41,11 @@ export default defineConfig(({ mode }) => {
     build: {
       // §11: split vendor deps into cacheable chunks — keeps every chunk under
       // the 500 kB warning limit and isolates rarely-changing framework code.
-      // Rolldown-native API: `manualChunks` is silently ignored by rolldown-vite.
+      // Rolldown-native API: `manualChunks` is silently ignored by rolldown-vite;
+      // `advancedChunks` is deprecated in favor of `codeSplitting` (same shape).
       rolldownOptions: {
         output: {
-          advancedChunks: {
+          codeSplitting: {
             groups: [
               {
                 name: "framework",

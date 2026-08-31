@@ -143,3 +143,24 @@
     @apply font-sans;
     }
 }
+
+/* §7 depth: soft, large, low-opacity accent glows layered behind surfaces —
+   never hard 1px outlines. App is dark-forced, so tokens are always defined. */
+@layer utilities {
+  .glow-primary {
+    box-shadow: 0 12px 48px -16px
+      color-mix(in oklab, var(--accent-glow-primary) 40%, transparent);
+  }
+  .glow-secondary {
+    box-shadow: 0 12px 48px -16px
+      color-mix(in oklab, var(--accent-glow-secondary) 40%, transparent);
+  }
+  .glow-tertiary {
+    box-shadow: 0 12px 48px -16px
+      color-mix(in oklab, var(--accent-glow-tertiary) 40%, transparent);
+  }
+  .glow-success {
+    box-shadow: 0 12px 48px -16px
+      color-mix(in oklab, var(--success) 40%, transparent);
+  }
+}

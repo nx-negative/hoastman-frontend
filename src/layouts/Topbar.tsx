@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { StatusPill } from "@/components/status-pill"
 import { clearAdminToken } from "@/store/auth"
 
 const TITLES: Record<string, string> = {
@@ -15,9 +16,8 @@ const TITLES: Record<string, string> = {
 }
 
 /**
- * Horizontal topbar (§7): shell context on the left; status pill + admin
- * session on the right. Pill and session are placeholders — live backend
- * status lands in Phase 5, real session/logout in Phase 4 (§12).
+ * Horizontal topbar (§7): shell context on the left; live status pill + admin
+ * session on the right (Phase 5).
  */
 export function Topbar() {
   const { pathname } = useLocation()
@@ -42,11 +42,7 @@ export function Topbar() {
       <h1 className="truncate text-sm font-semibold tracking-tight">{title}</h1>
 
       <div className="ml-auto flex items-center gap-2">
-        {/* Neutral placeholder — semantic pill styling per §7 once data is live. */}
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-foreground/5 px-2.5 py-1 text-xs font-medium text-muted-foreground">
-          <span className="size-1.5 rounded-full bg-muted-foreground/60" />
-          Idle
-        </span>
+        <StatusPill />
         <div className="flex items-center gap-2 rounded-full bg-foreground/5 py-1 pr-3 pl-1">
           <Avatar className="size-6">
             <AvatarFallback className="bg-accent-glow-primary/15 text-[10px] font-bold text-accent-glow-primary">
