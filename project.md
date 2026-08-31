@@ -166,7 +166,7 @@ Presentational components take props only, no fetching. Route/page components ow
 - https://dribbble.com/shots/24228102-Dashboard-Dark
 - https://dribbble.com/shots/26620360-Hynex-Healthcare-Dashboard-Design
 
-**Layout:** real dashboard shell — **vertical sidebar** (nav: Dashboard, Services, Load Test, future: Camera/Mic/Location/Screen/Control placeholders) + **horizontal topbar** (status pill, admin session, logout). Not a single flat scrolling page.
+**Layout:** real dashboard shell — **vertical sidebar** (nav: Dashboard, Services, Load Test, Connections [§12 Phase 8]) + **horizontal topbar** (status pill, admin session, logout). Not a single flat scrolling page.
 
 **Visual style — NOT flat/bordered, NOT literal "claymorphism":**
 
@@ -246,7 +246,7 @@ Vite+React+TS(v7)+Bun scaffold, React Compiler enabled, shadcn init with owner's
 **Exit:** `bun run dev` starts a blank themed app with no errors; shadcn theme visibly applied.
 
 ### Phase 2 — Dashboard Shell (Sidebar + Topbar)
-`AppLayout`, `Sidebar`, `Topbar` per §7 layout spec, React Router routes wired (empty pages), nav items for Dashboard/Services/Load Test + disabled future-feature items.
+`AppLayout`, `Sidebar`, `Topbar` per §7 layout spec, React Router routes wired (empty pages), nav items for Dashboard/Services/Load Test + Connections placeholder.
 **Exit:** Navigating between routes shows correct sidebar highlight + page content swap, matches §7 visual spec (glow/depth, accent tokens, half-radius).
 
 ### Phase 3 — API Client Layer
@@ -269,9 +269,19 @@ Service list with state badges (`enabled`/`disabled`/`pending`/`error`), Start/S
 Load test form (TanStack Form + Zod validation, bounded inputs matching backend limits), submit → poll report via TanStack Query → render metrics + gauge + verdict.
 **Exit:** Running a load test from the UI shows a completed report matching the raw API response.
 
-### Phase 8 — Future Feature Placeholders
-Camera/Mic/Location/Screen View/Full Control nav items + placeholder pages — disabled, "coming soon" state, permission/connection/error state design reserved (backend §24).
-**Exit:** Placeholders render correctly in sidebar/pages, clearly disabled, no dead links/console errors.
+### Phase 8 — Connections & Multi-Device Control (UI only, no live media yet)
+Replaces the generic "Coming Soon" nav items with a real **Connections** section.
+
+**Design (owner-specified, screenshot-confirmed):**
+- Sidebar: single **"Connections"** nav item (replaces separate Camera/Mic/Location/Screen/Full Control items).
+- Connections page: list of devices, each marked **online** or **offline**.
+- Clicking an **online** device opens a dedicated **phone-shaped window** (portrait aspect ratio, like a phone screen) showing that device's preview, with control buttons on the right side of the window.
+- **One connection = one window = one device.** Not shared/switching — each opened device gets its own persistent window.
+- User chooses how many devices to open at once (1, 2, or more) — all open windows are visible simultaneously on screen, user's choice entirely.
+- **"Total Control"** — a separate master toggle (TeamViewer-style): when ON, takes over mouse/touch input control across all currently-open windows at once. When turned OFF, control reverts back to each window's own individual controls (state before Total Control was enabled).
+- This phase is **UI/interaction scaffolding only** — no real WebRTC/media stream yet (that's the future realtime work, §19 out of scope). Use mock/placeholder device data and static preview boxes; wire real streams later.
+
+**Exit:** Connections page lists mock online/offline devices; clicking online ones opens independent phone-shaped windows with control button placeholders; opening multiple devices shows multiple windows at once; Total Control toggle visibly switches all open windows into a unified control state and reverts correctly on toggle-off.
 
 ### Phase 9 — Security Hardening
 CSP finalized, sourcemap stripped from prod build, `bun audit` clean, bundle grep for leaked secrets, dependency review.
@@ -305,7 +315,7 @@ phase-02: dashboard shell (sidebar + topbar)
 5. Dashboard shows live health/system data.
 6. Service start/stop/pending/enable/disable works from UI.
 7. Load test can be run and report displayed from UI.
-8. Future-feature nav items/pages present, correctly disabled.
+8. Connections page works: online/offline device list, per-device phone-shaped windows (multi-window, user's choice), Total Control master toggle.
 9. CSP + security checklist (§10) fully passed.
 10. No secrets/tokens in build output (verified by grep).
 11. `docs/user-manual.md`, `docs/setup-guide.md`, `docs/deployment-guide.md` exist and are accurate.

@@ -5,6 +5,11 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "types": ["node"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2023",
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["./src/*"]
     }
