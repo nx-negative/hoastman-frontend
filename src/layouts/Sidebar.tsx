@@ -40,12 +40,7 @@ const UPCOMING_ITEMS = [
   { title: "Full Control", icon: MousePointerClick },
 ]
 
-// §7: active nav item is THE accent surface — tinted translucent fill, accent
-// text/icon, soft colored glow. Overrides the shadcn sidebar-accent defaults.
-const ACTIVE_CLASSES =
-  "data-active:bg-accent-glow-primary/12 data-active:text-accent-glow-primary data-active:shadow-[0_0_16px_-6px_var(--accent-glow-primary)] data-active:hover:bg-accent-glow-primary/12 data-active:hover:text-accent-glow-primary"
-
-/** Vertical sidebar nav (§7). Presentational — active state derives from the URL. */
+/** Vertical sidebar nav (§7 layout). Presentational — active state derives from the URL. */
 export function AppSidebar() {
   const { pathname } = useLocation()
 
@@ -59,8 +54,8 @@ export function AppSidebar() {
               className="pointer-events-none"
               tabIndex={-1}
             >
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-accent-glow-primary to-accent-glow-secondary shadow-[0_0_20px_-4px_var(--accent-glow-primary)]">
-                <Server className="size-4 text-white" />
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                <Server className="size-4" />
               </div>
               <div className="flex min-w-0 flex-col leading-tight">
                 <span className="truncate text-sm font-bold tracking-tight">
@@ -85,7 +80,6 @@ export function AppSidebar() {
                     render={<Link to={item.url} />}
                     isActive={pathname.startsWith(item.url)}
                     tooltip={item.title}
-                    className={ACTIVE_CLASSES}
                   >
                     <item.icon />
                     <span>{item.title}</span>
@@ -116,9 +110,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">
-        <p className="px-2 pb-1 text-xs text-muted-foreground">
-          v0.1.0 — phase 2
-        </p>
+        <p className="px-2 pb-1 text-xs text-muted-foreground">v0.1.0</p>
       </SidebarFooter>
     </Sidebar>
   )

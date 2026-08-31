@@ -53,3 +53,10 @@
 5. Command: click the topbar status pill with the backend stopped, then restart the backend and click the pill again
    Expected: pill → red "Offline"; dashboard shows alert "Could not load system data" with Retry; after restart, clicking the pill (or Refresh) turns it green "Operational" and refills the cards.
    Fail: white screen / console stack → capture it.
+
+## Post-approval owner override — neutral default theme (2026-08-31)
+- Owner directive: drop §7 glow/depth styling and all accent colors; stock shadcn neutral palette only (owner-pasted light+dark tokens verbatim in src/styles/globals.css).
+- Removed: accent-glow / success / warning tokens, glow utility classes, gradient logo + glow shadows (login/sidebar), accent variants on StatCard, sidebar active-accent classes, custom avatar/button colors.
+- Radius back to shadcn default `0.625rem` (supersedes the §7 half-radius rule, same owner decision).
+- Status pill: Operational = neutral secondary pill; Offline = destructive tint; warning maps to muted. No additional palette.
+- Records the same kind of owner-override audit trail as the §2.2 sessionStorage decision.

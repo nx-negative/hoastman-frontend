@@ -6,15 +6,15 @@ import { cn } from "@/lib/utils"
 type Tone = "success" | "warning" | "error" | "muted"
 
 const TONES: Record<Tone, string> = {
-  success: "bg-success/10 text-success",
-  warning: "bg-warning/10 text-warning",
+  success: "bg-secondary text-secondary-foreground",
+  warning: "bg-muted text-muted-foreground",
   error: "bg-destructive/15 text-destructive",
   muted: "bg-foreground/5 text-muted-foreground",
 }
 
 const DOTS: Record<Tone, string> = {
-  success: "bg-success",
-  warning: "bg-warning",
+  success: "bg-foreground",
+  warning: "bg-muted-foreground",
   error: "bg-destructive",
   muted: "bg-muted-foreground/60",
 }

@@ -5,6 +5,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Docs mention historical class names; keep them out of Tailwind's scan. */
+@source not "../../docs";
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Inter Variable', sans-serif;
@@ -21,11 +24,6 @@
     --color-chart-3: var(--chart-3);
     --color-chart-2: var(--chart-2);
     --color-chart-1: var(--chart-1);
-    --color-success: var(--success);
-    --color-warning: var(--warning);
-    --color-accent-glow-primary: var(--accent-glow-primary);
-    --color-accent-glow-secondary: var(--accent-glow-secondary);
-    --color-accent-glow-tertiary: var(--accent-glow-tertiary);
     --color-ring: var(--ring);
     --color-input: var(--input);
     --color-border: var(--border);
@@ -77,7 +75,7 @@
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --radius: 0.3125rem;
+    --radius: 0.625rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -120,13 +118,6 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
-
-    /* §7 accent extensions — layered on top of the owner's base preset. */
-    --accent-glow-primary: oklch(0.65 0.25 280); /* purple */
-    --accent-glow-secondary: oklch(0.7 0.2 230); /* blue */
-    --accent-glow-tertiary: oklch(0.75 0.15 190); /* teal */
-    --success: oklch(0.75 0.18 145);
-    --warning: oklch(0.8 0.15 85);
 }
 
 @layer base {
@@ -142,25 +133,4 @@
   html {
     @apply font-sans;
     }
-}
-
-/* §7 depth: soft, large, low-opacity accent glows layered behind surfaces —
-   never hard 1px outlines. App is dark-forced, so tokens are always defined. */
-@layer utilities {
-  .glow-primary {
-    box-shadow: 0 12px 48px -16px
-      color-mix(in oklab, var(--accent-glow-primary) 40%, transparent);
-  }
-  .glow-secondary {
-    box-shadow: 0 12px 48px -16px
-      color-mix(in oklab, var(--accent-glow-secondary) 40%, transparent);
-  }
-  .glow-tertiary {
-    box-shadow: 0 12px 48px -16px
-      color-mix(in oklab, var(--accent-glow-tertiary) 40%, transparent);
-  }
-  .glow-success {
-    box-shadow: 0 12px 48px -16px
-      color-mix(in oklab, var(--success) 40%, transparent);
-  }
 }

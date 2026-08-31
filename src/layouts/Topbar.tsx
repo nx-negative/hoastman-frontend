@@ -45,7 +45,7 @@ export function Topbar() {
         <StatusPill />
         <div className="flex items-center gap-2 rounded-full bg-foreground/5 py-1 pr-3 pl-1">
           <Avatar className="size-6">
-            <AvatarFallback className="bg-accent-glow-primary/15 text-[10px] font-bold text-accent-glow-primary">
+            <AvatarFallback className="text-[10px] font-bold">
               AD
             </AvatarFallback>
           </Avatar>

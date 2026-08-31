@@ -104,7 +104,6 @@ export default function DashboardPage() {
                       : "Metrics unavailable"
                   }
                   meter={metrics ? metrics.cpu_usage_percent : null}
-                  accent="primary"
                   icon={<Cpu className="size-4" />}
                 />
                 <StatCard
@@ -123,7 +122,6 @@ export default function DashboardPage() {
                         )
                       : null
                   }
-                  accent="secondary"
                   icon={<MemoryStick className="size-4" />}
                 />
                 <StatCard
@@ -142,7 +140,6 @@ export default function DashboardPage() {
                         )
                       : null
                   }
-                  accent="tertiary"
                   icon={<HardDrive className="size-4" />}
                 />
                 <StatCard
@@ -153,7 +150,6 @@ export default function DashboardPage() {
                   hint={
                     metrics ? "HOSTMAN core process" : "Metrics unavailable"
                   }
-                  accent="success"
                   icon={<Activity className="size-4" />}
                 />
               </>
@@ -164,7 +160,7 @@ export default function DashboardPage() {
             aria-label="System details"
             className="grid gap-4 lg:grid-cols-2"
           >
-            <Card className="glow-secondary gap-0 border-0 p-6">
+            <Card className="gap-0 p-6">
               <CardRows
                 title="System"
                 rows={[
@@ -196,7 +192,7 @@ export default function DashboardPage() {
                 ]}
               />
             </Card>
-            <Card className="glow-primary gap-0 border-0 p-6">
+            <Card className="gap-0 p-6">
               <CardRows
                 title="Runtime"
                 rows={[
@@ -242,7 +238,7 @@ export default function DashboardPage() {
 
 function StatSkeleton() {
   return (
-    <Card className="gap-0 border-0 p-5">
+    <Card className="gap-0 p-5">
       <Skeleton className="h-3 w-20" />
       <Skeleton className="mt-4 h-9 w-24" />
       <Skeleton className="mt-4 h-1.5 w-full" />

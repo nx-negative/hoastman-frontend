@@ -9,7 +9,7 @@ Status: complete, all checks green — awaiting owner approval (§13).
 - TS v7 strict: `@typescript/native` alias → `typescript@7.0.2` (native `tsc`, used by `typecheck`/`build`); `typescript` name → `@typescript/typescript6@6.0.2` (TS 6 JS API required by typescript-eslint — official side-by-side recipe from the TS 7.0 announcement).
 - Folder structure per §6: `src/routes|layouts|api|store|workers|styles|components/ui|lib`, `docs/phases`, `scripts`, `.github/workflows`, `public`.
 - shadcn components via CLI only: `button` (init), `card`, `badge` (`bunx --bun shadcn@latest add card badge`).
-- §7 tokens layered on owner preset in `src/styles/globals.css`: `--radius: 0.3125rem` (half default), `--accent-glow-primary/secondary/tertiary`, `--success`, `--warning`, registered as Tailwind theme colors; app forced dark. Bootstrap proof card uses purple glow shadow (`shadow-[0_0_120px_-24px_var(--accent-glow-primary)]`), no hard border.
+- §7 tokens layered on owner preset in `src/styles/globals.css`: half-default radius plus accent-glow / success / warning variables registered as Tailwind theme colors; app forced dark. Bootstrap proof card used a purple glow shadow, no hard border. (Superseded by the Phase 5 neutral-theme override — see phase-05.md.)
 - Config: `.env.example` (`VITE_API_BASE_URL`), env rules in `.gitignore` (real `.env*` never committed), CI workflow (audit → lint → typecheck → test → build), `README.md`, `docs/versions.md`, Vitest unit test for `cn()`.
 - §5 core deps pre-installed for later phases: `react-router@8`, `@tanstack/react-query@5`, `@tanstack/react-form@1`, `zod@4`.
 
