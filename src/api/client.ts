@@ -56,19 +56,33 @@ async function toApiError(response: Response): Promise<ApiError> {
  */
 export async function apiFetch(
   path: string,
-  init?: Omit<RequestInit, "headers"> & { headers?: Record<string, string> }
+  init?: Omit<RequestInit, "headers"> & { headers?: Record<string, string> },
+  // Explicit token lets callers (e.g. login verification) prove a token BEFORE
+  // it is written to the session store (§4: no unverified token ever reaches
+  // the store). When omitted, the current session token is sent.
+  token?: string
 ): Promise<unknown> {
   const headers: Record<string, string> = { ...init?.headers }
   if (init?.body) headers["content-type"] = "application/json"
-  // §9: admin token in memory only, sent as X-Admin-Token.
-  const token = getAdminToken()
-  if (token) headers["X-Admin-Token"] = token
+  const resolved = token ?? getAdminToken()
+  if (resolved) headers["X-Admin-Token"] = resolved
 
   let response: Response
   try {
-    response = await fetch(`${API_BASE}${path}`, { ...init, headers })
+    // §9/§10: never read from the HTTP cache — responses are keyed only by URL
+    // and carry a bearer-style token in a custom header (no Vary), so caching
+    // would leak one session's result into another's request.
+    response = await fetch(`${API_BASE}${path}`, {
+      ...init,
+      headers,
+      cache: "no-store",
+    })
   } catch {
-    throw new ApiError(0, "network_error", "Network error — backend unreachable")
+    throw new ApiError(
+      0,
+      "network_error",
+      "Network error — backend unreachable"
+    )
   }
 
   if (!response.ok) throw await toApiError(response)

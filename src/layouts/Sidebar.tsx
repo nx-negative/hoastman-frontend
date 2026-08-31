@@ -59,7 +59,7 @@ export function AppSidebar() {
               className="pointer-events-none"
               tabIndex={-1}
             >
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-accent-glow-primary to-accent-glow-secondary shadow-[0_0_20px_-4px_var(--accent-glow-primary)]">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-linear-to-br from-accent-glow-primary to-accent-glow-secondary shadow-[0_0_20px_-4px_var(--accent-glow-primary)]">
                 <Server className="size-4 text-white" />
               </div>
               <div className="flex min-w-0 flex-col leading-tight">

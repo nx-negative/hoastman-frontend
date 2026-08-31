@@ -8,10 +8,13 @@ interface TestServer {
   lastHeaders: Record<string, string | string[] | undefined>
 }
 
-type Handler = (req: IncomingMessage, res: {
-  writeHead: (status: number, headers?: Record<string, string>) => void
-  end: (body?: string) => void
-}) => void
+type Handler = (
+  req: IncomingMessage,
+  res: {
+    writeHead: (status: number, headers?: Record<string, string>) => void
+    end: (body?: string) => void
+  }
+) => void
 
 function startServer(handler: Handler): Promise<TestServer> {
   return new Promise((resolve) => {
@@ -43,7 +46,9 @@ function startServer(handler: Handler): Promise<TestServer> {
 }
 
 async function loadModules(base: string) {
-  vi.stubEnv("VITE_API_BASE_URL", base)
+  // API_BASE lives in @/config as a constant (no env reads — §10: the backend
+  // origin must never be inlinable into the client bundle). Tests mock it.
+  vi.doMock("@/config", () => ({ API_BASE: base }))
   vi.resetModules()
   return {
     client: await import("./client"),
@@ -53,7 +58,7 @@ async function loadModules(base: string) {
 }
 
 afterEach(() => {
-  vi.unstubAllEnvs()
+  vi.doUnmock("@/config")
   vi.resetModules()
 })
 
@@ -61,7 +66,11 @@ describe("api client (live round-trips against a local server)", () => {
   it("parses /healthz and /readyz responses", async () => {
     const ts = await startServer((req, res) => {
       res.writeHead(200, { "content-type": "application/json" })
-      res.end(req.url === "/readyz" ? '{"status":"ok","ready":true}' : '{"status":"ok"}')
+      res.end(
+        req.url === "/readyz"
+          ? '{"status":"ok","ready":true}'
+          : '{"status":"ok"}'
+      )
     })
     const { health } = await loadModules(ts.url)
 
@@ -120,7 +129,7 @@ describe("api client (live round-trips against a local server)", () => {
     ts2.server.close()
   })
 
-  it("sends the in-memory admin token as X-Admin-Token", async () => {
+  it("sends the session admin token as X-Admin-Token", async () => {
     const ts = await startServer((_req, res) => {
       res.writeHead(200, { "content-type": "application/json" })
       res.end('{"status":"ok"}')
@@ -153,5 +162,40 @@ describe("retry policy (§9)", () => {
     expect(client.retryDelay(1)).toBe(1000)
     expect(client.retryDelay(2)).toBe(2000)
     expect(client.retryDelay(9)).toBe(2000)
+  })
+})
+
+describe("login-time token verification (§4 pre-verification bypass fix)", () => {
+  it("sends an explicit token via X-Admin-Token without the store having one", async () => {
+    const ts = await startServer((_req, res) => {
+      res.writeHead(200, { "content-type": "application/json" })
+      res.end('{"ok":true}')
+    })
+    const { client, auth } = await loadModules(ts.url)
+
+    // store is empty — verify the token is sent ONLY via the explicit argument
+    expect(auth.hasAdminToken()).toBe(false)
+    await client.apiFetch("/__probe__", undefined, "explicit-token")
+    expect(ts.lastHeaders["x-admin-token"]).toBe("explicit-token")
+    ts.server.close()
+  })
+
+  it("uses the store token only when no explicit override is provided", async () => {
+    const ts = await startServer((_req, res) => {
+      res.writeHead(200, { "content-type": "application/json" })
+      res.end('{"ok":true}')
+    })
+    const { client, auth } = await loadModules(ts.url)
+
+    // no token anywhere → no header
+    await client.apiFetch("/__probe__")
+    expect(ts.lastHeaders["x-admin-token"]).toBeUndefined()
+
+    // store token → header present, proving apiFetch falls back to the store
+    auth.setAdminToken("from-store")
+    await client.apiFetch("/__probe__")
+    expect(ts.lastHeaders["x-admin-token"]).toBe("from-store")
+
+    ts.server.close()
   })
 })
