@@ -19,4 +19,19 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
+  build: {
+    // §11: split vendor deps into cacheable chunks — keeps every chunk under
+    // the 500 kB warning limit and isolates rarely-changing framework code.
+    rolldownOptions: {
+      output: {
+        advancedChunks: {
+          groups: [
+            { name: "framework", test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
+            { name: "zod", test: /node_modules[\\/]zod[\\/]/ },
+            { name: "vendor", test: /node_modules[\\/]/ },
+          ],
+        },
+      },
+    },
+  },
 })
