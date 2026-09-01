@@ -10,6 +10,12 @@ const DashboardPage = lazy(() => import("@/routes/dashboard"))
 const ServicesPage = lazy(() => import("@/routes/services"))
 const LoadTestPage = lazy(() => import("@/routes/load-test"))
 const LoginPage = lazy(() => import("@/routes/login"))
+// §12 Phase 8: future-feature placeholders.
+const CameraPage = lazy(() => import("@/routes/camera"))
+const MicrophonePage = lazy(() => import("@/routes/microphone"))
+const LocationPage = lazy(() => import("@/routes/location"))
+const ScreenViewPage = lazy(() => import("@/routes/screen-view"))
+const FullControlPage = lazy(() => import("@/routes/full-control"))
 
 export function App() {
   return (
@@ -28,7 +34,13 @@ export function App() {
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="services" element={<ServicesPage />} />
           <Route path="load-test" element={<LoadTestPage />} />
-          {/* Unknown URLs must not dead-end (§12 Phase 8: no dead links). */}
+          {/* §12 Phase 8: placeholders — real routes, no dead links. */}
+          <Route path="camera" element={<CameraPage />} />
+          <Route path="microphone" element={<MicrophonePage />} />
+          <Route path="location" element={<LocationPage />} />
+          <Route path="screen-view" element={<ScreenViewPage />} />
+          <Route path="full-control" element={<FullControlPage />} />
+          {/* Unknown URLs must not dead-end. */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>

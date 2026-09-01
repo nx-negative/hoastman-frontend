@@ -30,14 +30,14 @@ const NAV_ITEMS = [
   { title: "Load Test", url: "/load-test", icon: Gauge },
 ]
 
-// §12 Phase 8 adds placeholder pages for these — entries stay disabled until
-// then so the sidebar never contains dead links.
+// §12 Phase 8: placeholder pages exist for these — items navigate (no dead
+// links); each page itself is clearly marked disabled/"coming soon".
 const UPCOMING_ITEMS = [
-  { title: "Camera", icon: Camera },
-  { title: "Microphone", icon: Mic },
-  { title: "Location", icon: MapPin },
-  { title: "Screen View", icon: Monitor },
-  { title: "Full Control", icon: MousePointerClick },
+  { title: "Camera", url: "/camera", icon: Camera },
+  { title: "Microphone", url: "/microphone", icon: Mic },
+  { title: "Location", url: "/location", icon: MapPin },
+  { title: "Screen View", url: "/screen-view", icon: Monitor },
+  { title: "Full Control", url: "/full-control", icon: MousePointerClick },
 ]
 
 /** Vertical sidebar nav (§7 layout). Presentational — active state derives from the URL. */
@@ -96,7 +96,8 @@ export function AppSidebar() {
               {UPCOMING_ITEMS.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
-                    disabled
+                    render={<Link to={item.url} />}
+                    isActive={pathname.startsWith(item.url)}
                     tooltip={item.title}
                     className="opacity-60"
                   >
