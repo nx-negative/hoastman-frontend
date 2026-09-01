@@ -25,3 +25,7 @@ export const getLoadReport = (): Promise<LoadReport> =>
   apiFetch("/api/v1/system/test/report").then((data) =>
     parseWith(loadReportSchema, data)
   )
+
+// Report query key (§9). Polling cadence is run-state dependent, so the
+// useQuery options live in the route component; only the key is shared here.
+export const LOAD_REPORT_QUERY_KEY = ["load", "report"] as const
