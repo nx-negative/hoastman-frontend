@@ -32,3 +32,13 @@ jobs:
 
       - name: Build
         run: bun run build
+
+      - name: Security checks (§10)
+        run: |
+          # No secrets/backend internals in the bundle (admin_disabled is an
+          # allowlisted public error-code string, not a secret).
+          ! grep -rqE '127\.0\.0\.1:8080|localhost:8080|API_PROXY|VITE_[A-Z_]+|hostman_admin_token|BEGIN [A-Z]+ PRIVATE KEY' dist/assets
+          # No sourcemaps in production output.
+          test "$(find dist -name '*.map' | wc -l)" -eq 0
+          # Strict CSP meta present in the built HTML.
+          grep -q 'Content-Security-Policy' dist/index.html

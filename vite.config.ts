@@ -2,7 +2,37 @@ import path from "path"
 import tailwindcss from "@tailwindcss/vite"
 import react, { reactCompilerPreset } from "@vitejs/plugin-react"
 import babel from "@rolldown/plugin-babel"
-import { defineConfig, loadEnv } from "vite"
+import { defineConfig, loadEnv, type Plugin } from "vite"
+
+// §10: strict CSP via <meta> fallback, injected ONLY into production builds
+// (dev is exempt — Vite HMR needs inline scripts). Deployment sets the real
+// header via reverse proxy (§15/Phase 10); meta cannot carry frame-ancestors,
+// so that directive belongs to the proxy config. React/Base UI style via
+// CSSOM (no style attributes, no runtime <style> injection — verified in
+// node_modules), so no 'unsafe-inline'/'unsafe-eval' is ever required.
+function cspMetaPlugin(): Plugin {
+  return {
+    name: "hostman:csp-meta",
+    apply: "build",
+    transformIndexHtml(html) {
+      const csp = [
+        "default-src 'self'",
+        "script-src 'self'",
+        "style-src 'self'",
+        "img-src 'self' data:",
+        "font-src 'self'",
+        "connect-src 'self'",
+        "object-src 'none'",
+        "base-uri 'none'",
+        "form-action 'none'",
+      ].join("; ")
+      return html.replace(
+        /<head>/,
+        `<head>\n    <meta http-equiv="Content-Security-Policy" content="${csp}" />`
+      )
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -21,6 +51,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      cspMetaPlugin(),
       // React Compiler (§5): auto-memoization. Keep last so it runs on final JSX.
       babel({
         presets: [reactCompilerPreset()],
